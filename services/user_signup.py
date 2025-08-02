@@ -16,7 +16,14 @@ async def signup(user_data: SignupRequest):
     }
     
     # Insert user into database
+    print(f"Attempting to insert user into collection: {Collection_user.name}")
     result = await Collection_user.insert_one(user_doc)
+    print(f"User inserted with ID: {result.inserted_id}")
+    print(f"User data: {user_doc}")
+    
+    # Verify the insertion by finding the document
+    inserted_user = await Collection_user.find_one({"_id": result.inserted_id})
+    print(f"Verification - Found user: {inserted_user is not None}")
     
     # Return user data without password
     return SignupResponse(
